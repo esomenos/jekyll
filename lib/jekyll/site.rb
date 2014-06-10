@@ -374,6 +374,14 @@ module Jekyll
     end
 
     def has_yaml_header?(file)
+      Encoding.default_internal = Encoding::UTF_8
+      begin
+        !!(File.open(file).read =~ /\A---\r?\n/)
+      rescue ArgumentError
+        Jekyll.logger.error "Error:", "It seems that there are issues determining if the following file has a yaml header: #{file}"
+        raise
+      end
+    end
       "---" == File.open(file) { |fd| fd.read(3) }
     end
 

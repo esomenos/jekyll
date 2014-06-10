@@ -368,6 +368,16 @@ class TestSite < Test::Unit::TestCase
         assert_equal site.site_payload['site']['data']['languages'], file_content
       end
 
+      should "convert encoding into UTF_8" do
+        site = Site.new(Jekyll.configuration)
+        site.process
+
+        file_content = SafeYAML.load_file(File.join(source_dir, '_data', 'members.yaml'))
+
+        assert_equal site.has_yaml_header?['encoding'], UTF_8
+
+      end
+
       should "load symlink files in unsafe mode" do
         site = Site.new(Jekyll.configuration.merge({'safe' => false}))
         site.process
